@@ -15,12 +15,22 @@ app.listen(PORT, () => {
 let database = functions.connect();
 
 
-// première route : statut de l'API
-app.get("/status", (request, response) => {
-    const status = {
+
+// Statut de l'API
+app.get("/api/status", (request, response) => {
+    let status = {
         "Status": "Running"
     };
-
+    response.status(200);
+    if (database.error) {
+        response.status(409);
+        status["database"] = "Not connected";   
+    }
     response.send(status);
 });
 
+// Connexion 
+app.get("/api/login", (request, response) => {
+    database.
+    response.send(status);
+});

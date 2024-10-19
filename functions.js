@@ -5,7 +5,7 @@ const env = require('dotenv').config().parsed;
  * Connection to the database 
  * @return the database object (from mongodb)
  * */
-async function connect() {
+function connect() {
     try {
         let url = env.DB_URL.replace('<user>', encodeURIComponent(env.DB_USER)).replace('<password>', encodeURIComponent(env.DB_PASSWORD));
         let client = new DB.MongoClient(url);
