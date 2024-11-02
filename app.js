@@ -5,6 +5,7 @@ const app = express();
 
 const db = require('./routes/status.js')
 const login = require('./routes/login.js')
+const tournament = require('./routes/tournament.js')
 
 app.use(express.json());
 
@@ -14,22 +15,10 @@ app.listen(PORT, () => {
     console.log("Server Listening on PORT:", PORT);
   });
 
-// API Status
-/*app.get("/api/status", (request, response) => {
-    let status = {
-        "Status": "Running"
-    };
-    response.status(200);
-    if (database.error) {
-        response.status(409);
-        status["database"] = "Not connected";   
-    }
-    response.send(status);
-});*/
-
-
+// routes 
 app.use('/api/status', db)
 app.use('/api/login', login)
+app.use('/api/tournament', tournament)
 
 /*
 app.post("/api/login/new", (request, response) => {

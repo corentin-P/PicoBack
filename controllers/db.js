@@ -31,6 +31,7 @@ class Db {
 
     static connectionStatus(request, response) {
         // on arrive à avoir un client sans connection à internet !!! Attention 
+        // on arrive à avoir un client avec des mauvais identifiants !!! Attention 
         let client = Db.getDb()
         if (client['error']) {
             response.status(409);

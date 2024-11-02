@@ -6,5 +6,6 @@ const UserController = require('../controllers/user.js');
 router.post('/', UserController.connectUser);
 
 // Add more routes for the /login endpoint as needed
+router.post('/new', UserController.createNewUser);
 
 module.exports = router;
