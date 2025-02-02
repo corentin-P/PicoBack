@@ -6,6 +6,7 @@ class Tournament {
         let collection = Db.getDb().collection('tournament')
         let values = await collection.find({}).toArray()
         response.status(200)
+        response.setHeader('Access-Control-Allow-Origin', "http://localhost:5173")
         response.send(values)
         return
     }
