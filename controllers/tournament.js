@@ -12,6 +12,7 @@ class Tournament {
     }
 
     static async getNextTournament(request, response) {
+        response.setHeader('Access-Control-Allow-Origin', "http://localhost:5173")
         let collection = Db.getDb().collection('tournament')
         let values = await collection.find({}).toArray()
         let dateNow = new Date(Date.now())
@@ -39,27 +40,72 @@ class Tournament {
         return
     }
 
-    static async getLastTournament(request, response) {
+    static async getAllNextTournament(request, response) {
+        response.setHeader('Access-Control-Allow-Origin', "http://localhost:5173")
         let collection = Db.getDb().collection('tournament')
         let values = await collection.find({}).toArray()
         let dateNow = new Date(Date.now())
-        let nextTournament
+        let nextTournaments = []
+        for (let i = 0; i < values.length; i++) {
+            let currentDate = new Date(values[i]["date"])
+            if (currentDate.getTime() > dateNow.getTime()) {
+                nextTournaments.push(values[i])
+            }
+        }
+        if (nextTournaments.length > 0) {
+            response.status(200)
+            response.send(nextTournaments)
+            return
+        }
+        response.status(200)
+        response.send({"message": "There are no futur tournament"})
+        return
+    }
+
+    static async getLastTournament(request, response) {
+        response.setHeader('Access-Control-Allow-Origin', "http://localhost:5173")
+        let collection = Db.getDb().collection('tournament')
+        let values = await collection.find({}).toArray()
+        let dateNow = new Date(Date.now())
+        let lastTournament
         for (let i = 0; i < values.length; i++) {
             let currentDate = new Date(values[i]["date"])
             if (currentDate.getTime() < dateNow.getTime()) {
-                if (!nextTournament) {
-                    nextTournament = values[i]
+                if (!lastTournament) {
+                    lastTournament = values[i]
                 } else {
-                    let dateNextTournament = new Date(nextTournament["date"])
-                    if (currentDate.getTime() > dateNextTournament.getTime()) {
-                        nextTournament = values[i]
+                    let dateLastTournament = new Date(lastTournament["date"])
+                    if (currentDate.getTime() > dateLastTournament.getTime()) {
+                        lastTournament = values[i]
                     }
                 }
             }
         }
-        if (nextTournament) {
+        if (lastTournament) {
             response.status(200)
-            response.send(nextTournament)
+            response.send(lastTournament)
+            return
+        }
+        response.status(200)
+        response.send({"message": "There are no passed tournament"})
+        return
+    }
+    
+    static async getAllLastTournament(request, response) {
+        response.setHeader('Access-Control-Allow-Origin', "http://localhost:5173")
+        let collection = Db.getDb().collection('tournament')
+        let values = await collection.find({}).toArray()
+        let dateNow = new Date(Date.now())
+        let lastTournaments = []
+        for (let i = 0; i < values.length; i++) {
+            let currentDate = new Date(values[i]["date"])
+            if (currentDate.getTime() < dateNow.getTime()) {
+                lastTournaments.push(values[i]);
+            }
+        }
+        if (lastTournaments.length > 0) {
+            response.status(200)
+            response.send(lastTournaments)
             return
         }
         response.status(200)
@@ -68,6 +114,7 @@ class Tournament {
     }
 
     static async createNewTournament(request, response) {
+        response.setHeader('Access-Control-Allow-Origin', "http://localhost:5173")
         if (!request.body['admin-email'] || !request.body['admin-password'] || !request.body.title || !request.body.date || !request.body.location) {
             response.status(404)
             response.send({"error": "One or more parameter is/are missing."})
@@ -90,12 +137,13 @@ class Tournament {
     }
     
     static async modifyTournament(request, response) {
+        response.setHeader('Access-Control-Allow-Origin', "http://localhost:5173")
         if (!request.body['admin-email'] || !request.body['admin-password'] || !request.body['tournament-id']) {
             response.status(404)
             response.send({"error": "One or more parameter is/are missing."})
             return
         }
-        
+        // TODO
     }
 }
 
